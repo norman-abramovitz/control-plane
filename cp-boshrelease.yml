@@ -28,6 +28,7 @@ instance_groups:
       - name: docker
         release: containers
         properties:
+          bind: 5010
           recipe:
             version: '3'
             services:

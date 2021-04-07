@@ -28,18 +28,9 @@ instance_groups:
       - name: docker
         release: containers
         properties:
+          files:
+            auth/htpasswd: (( file auth/htpasswd ))
+            certs/domain.crt: (( file certs/domain.crt ))
+            certs/domain.key: (( file certs/domain.key ))
           bind: 5010
-          recipe:
-            version: '3'
-            services:
-              registry:
-                image: registry:latest
-                ports:
-                  - '5000:5000'
-                volumes:
-                  - $PWD/data/:/var/lib/registry 
-                  - $PWD/auth:/auth 
-                environment:
-                  - REGISTRY_AUTH=htpasswd
-                  - REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm
-                  - REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd
+          recipe: (( file docker-compose.yml ))

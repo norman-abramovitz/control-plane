@@ -12,8 +12,10 @@ openssl req \
   -newkey rsa:4096 -nodes -sha256 -keyout certs/domain.key \
   -x509 -days 365 -out certs/domain.crt
 ```
-Make has two targets
-merge 
-deploy
+Make has two targets:
+* merge 
+* deploy
 
-The merge creates a file called cp-deploy.yml used by makefile target deploy
+The merge target creates a file called cp-deploy.yml used by makefile target deploy.
+
+

@@ -29,8 +29,8 @@ instance_groups:
         release: containers
         properties:
           files:
-            auth/htpasswd: (( file auth/htpasswd ))
-            certs/domain.crt: (( file certs/domain.crt ))
-            certs/domain.key: (( file certs/domain.key ))
+            auth/htpasswd: (( file "auth/htpasswd" ))
+            certs/domain.crt: (( file "certs/domain.crt" ))
+            certs/domain.key: (( file "certs/domain.key" ))
           bind: 5010
-          recipe: (( file docker-compose.yml ))
+          recipe: (( load "docker-compose.yml" ))

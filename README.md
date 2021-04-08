@@ -18,4 +18,23 @@ Make has two targets:
 
 The merge target creates a file called cp-deploy.yml used by makefile target deploy.
 
+The containers-boshrelease allows us to access the docker daemon if we add in the bind
+stanza. The value represents a port number which this POC is using 5010.  
 
+Run the commmand `bosh -e <your bosh> -d control-plane vms` to get the ip address.
+
+You can set DOCKER_HOST environment variable "tcp://\<ip-address>:5010".  The docker and docker-compose commands will reference the remote docker daemon.
+
+This becomes painful when switching between your local docker and your remote docker.
+
+Docker provides another mechanism called contexts and then then we can pass the context
+argument when you want to communicate to the remote docker daemon.
+
+```
+docker context create cp --docker 'host=tcp://10.128.104.132:5010'
+docker context ls
+docker --context cp ps
+docker-compose --context cp config
+
+NOTE: I am not sure why "docker-compose --context cp ps" does not show anything  
+```

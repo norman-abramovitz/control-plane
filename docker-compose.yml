@@ -6,9 +6,9 @@ services:
     ports:
       - '443:443'
     volumes:
-      - $PWD/data/:/var/lib/registry 
-      - $PWD/auth:/auth 
-      - $PWD/certs:/certs
+      - $PWD/registry/data/:/var/lib/registry 
+      - $PWD/registry/auth:/auth 
+      - $PWD/registry/certs:/certs
 
     environment:
       - REGISTRY_AUTH=htpasswd
@@ -17,4 +17,20 @@ services:
       - REGISTRY_HTTP_ADDR=0.0.0.0:443
       - REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt
       - REGISTRY_HTTP_TLS_KEY=/certs/domain.key
+  vault:
+    image: vault:latest
+    volumes:
+      - ./vault/config:/vault/config
+      - ./vault/policies:/vault/policies
+      - ./vault/data:/vault/data
+    ports:
+      - 8200:8200
+    environment:
+      - VAULT_ADDR=http://0.0.0.0:8200
+      - VAULT_API_ADDR=http://0.0.0.0:8200
+      - VAULT_ADDRESS=http://0.0.0.0:8200
+    cap_add:
+      - IPC_LOCK
+    command: vault server -config=/vault/config/vault.json
+
 

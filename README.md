@@ -34,7 +34,16 @@ argument when you want to communicate to the remote docker daemon.
 docker context create cp --docker 'host=tcp://10.128.104.132:5010'
 docker context ls
 docker --context cp ps
-docker-compose --context cp config
+docker-compose --context cp -p running ps
+```
 
 NOTE: I am not sure why "docker-compose --context cp ps" does not show anything  
-```
+Answer: James explained that he created a project his deployment.  So docker displays o
+everything while docker-compose needs to display by project.
+
+NOTE: Kludge in the jumpbox shared by using my pubic key for tpol and norm.  I did not
+try to save this information yet in the repository.
+
+NOTE: Had issues with trying to increase the persistent disk size. It only seemed to work
+when I delete-deployment and deploy.   I did not try all combinations of bosh recreate.
+

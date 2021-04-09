@@ -2,7 +2,7 @@
 name: control-plane
 stemcells:
   - alias:   default
-    os:      ubuntu-xenial
+    os:      ubuntu-bionic
     version: latest
 
 releases:
@@ -20,18 +20,33 @@ instance_groups:
   - name:      docker
     instances: 1 
     azs:       [z1]
-    vm_type:   default
     stemcell:  default
     networks:  [{name: default}]
+    persistent_disk: 80000
+    vm_resources:
+      cpu: 2
+      ephemeral_disk_size: 8192
+      ram: 8192
 
     jobs:
       - name: docker
         release: containers
         properties:
           files:
-            auth/htpasswd: (( file "registry/auth/htpasswd" ))
-            certs/domain.crt: (( file "registry/certs/domain.crt" ))
-            certs/domain.key: (( file "registry/certs/domain.key" ))
+            registry/auth/htpasswd: (( file "registry/auth/htpasswd" ))
+            registry/certs/domain.crt: (( file "registry/certs/domain.crt" ))
+            registry/certs/domain.key: (( file "registry/certs/domain.key" ))
             vault/config/vault.json: (( file "vault/config/vault.json" ))
           bind: 5010
           recipe: (( load "docker-compose.yml" ))
+      - name: jumpbox
+        release: containers
+        properties:
+          default:
+            group: staff
+          users:
+            - username: norm
+              key:      (( file "./norm.pub" ))
+
+            - username: tpol
+              key:      (( file "./norm.pub" ))

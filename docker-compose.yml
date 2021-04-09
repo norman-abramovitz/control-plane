@@ -6,9 +6,9 @@ services:
     ports:
       - '443:443'
     volumes:
-      - $PWD/registry/data/:/var/lib/registry 
-      - $PWD/registry/auth:/auth 
-      - $PWD/registry/certs:/certs
+      - ./registry/data/:/var/lib/registry 
+      - ./registry/auth/:/auth 
+      - ./registry/certs/:/certs
 
     environment:
       - REGISTRY_AUTH=htpasswd
@@ -32,5 +32,61 @@ services:
     cap_add:
       - IPC_LOCK
     command: vault server -config=/vault/config/vault.json
+  shield-vault:
+    image: vault:latest
+    environment:
+      VAULT_API_ADDR: http://127.0.0.1:8200
+      VAULT_LOCAL_CONFIG: >-
+        {
+          "disable_mlock": 1,
+          "backend": {
+            "file": {
+              "path": "/vault/file"
+            }
+          },
+          "listener": {
+            "tcp": {
+              "address":     "0.0.0.0:8200",
+              "tls_disable": 1
+            },
+          },
+          "default_lease_ttl": "168h",
+          "max_lease_ttl": "720h"
+        }
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - 'vault-data:/vault/file'
+    command: 
+      - vault
+      - server
+      - "-config"
+      - "/vault/config/local.json"
 
+  core:
+    depends_on:
+      - vault
+    image: 'shieldproject/shield:8'
+    ports: ['9009:80']
+    command: ['/shield/init/core']
+    environment:
+      SHIELD_VAULT_ADDRESS: http://shield-vault:8200
+      SHIELD_API_BIND: core:80
+    volumes:
+      - 'shield-data:/var/shield'
+      - 'shield-etc:/etc/shield'
 
+  webdav:
+    image: 'shieldproject/webdav:latest'
+    ports: ['9007:80']
+    environment:
+      USERNAME: webdav
+      PASSWORD: password
+    volumes:
+      - 'webdav-data:/var/webdav'
+
+volumes:
+  vault-data:
+  shield-data:
+  shield-etc:
+  webdav-data:

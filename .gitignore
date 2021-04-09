@@ -1,3 +1,3 @@
-certs/*
-!certs/.gitkeep
+**/certs/*
+!**/certs/.gitkeep
 cp-deploy.yml

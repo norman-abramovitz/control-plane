@@ -65,7 +65,7 @@ services:
 
   core:
     depends_on:
-      - vault
+      - shield-vault
     image: 'shieldproject/shield:8'
     ports: ['9009:80']
     command: ['/shield/init/core']

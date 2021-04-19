@@ -56,7 +56,7 @@ services:
     cap_add:
       - IPC_LOCK
     volumes:
-      - 'vault-data:/vault/file'
+      - 'shield-vault-data:/vault/file'
     command: 
       - vault
       - server
@@ -86,7 +86,7 @@ services:
       - 'webdav-data:/var/webdav'
 
 volumes:
-  vault-data:
+  shield-vault-data:
   shield-data:
   shield-etc:
   webdav-data:

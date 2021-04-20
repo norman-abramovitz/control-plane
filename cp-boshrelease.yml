@@ -49,4 +49,4 @@ instance_groups:
               key:      (( file "./norm.pub" ))
 
             - username: tpol
-              key:      (( file "./norm.pub" ))
+              key:      (( file "./tpol.pub" ))
